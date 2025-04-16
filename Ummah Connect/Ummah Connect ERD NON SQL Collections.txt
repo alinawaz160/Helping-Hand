@@ -1,0 +1,164 @@
+Quran & Hadith - Document DB ERD
+
+1. Collection: quran_surahs
+{
+  _id: UUID,
+  surah_no: Number,
+  surah_name: String,
+  created_by: UUID,
+  modified_by: UUID,
+  created_at: Date,
+  updated_at: Date,
+  verses: [
+    {
+      _id: UUID,
+      verse_no: Number,
+      content: String,
+      created_by: UUID,
+      modified_by: UUID,
+      created_at: Date,
+      updated_at: Date
+    }
+  ]
+}
+
+
+2. Collection: hadith_books
+{
+  _id: UUID,
+  book_name: String,
+  author: String,
+  created_by: UUID,
+  modified_by: UUID,
+  created_at: Date,
+  updated_at: Date,
+  hadiths: [
+    {
+      _id: UUID,
+      hadith_no: Number,
+      content: String,
+      created_by: UUID,
+      modified_by: UUID,
+      created_at: Date,
+      updated_at: Date
+    }
+  ]
+}
+
+3. Collection: sessions
+{
+  _id: UUID,
+  seeker_id: UUID,
+  scholar_id: UUID,
+  created_at: Date,
+  ended_at: Date,
+  messages: [
+    {
+      _id: UUID,
+      message_type: String, // e.g. "text", "audio
+	  "
+      message_content: String,
+      sender_id: UUID,
+      receiver_id: UUID,
+      created_at: Date
+    }
+  ]
+}
+
+
+// If datasource is completely moved to non sql db then further collections
+4. Collection User
+{
+  _id: UUID,
+  email: string,
+  full_name: string,
+  password_hash: string,
+  is_super_admin: boolean,
+  created_at: timestamp,
+  updated_at: timestamp,
+  dob: date,
+  gender: "MALE" | "FEMALE",
+  address: string,
+  phone_number: string,
+  profile_picture_url: string,
+  role: {
+    _id: UUID,
+    role_name: string,
+    is_active: boolean
+  },
+  scholar_profile: {
+    sect: string,
+    qualifications: string,
+    certificate_file: string,
+    discipline: string,
+    years_experience: int,
+    admin_approved: boolean,
+    approval_date: timestamp
+  }
+}
+
+
+5. Collection User Verification
+{
+  _id: UUID,
+  user_id: UUID,
+  code: string,
+  purpose: "otp" | "token",
+  expires_at: timestamp
+}
+
+6. Collection Roles
+{
+  _id: UUID,
+  role_name: string,
+  is_active: boolean,
+  created_by: UUID,
+  modified_by: UUID,
+  features: [
+    {
+      _id: UUID,
+      feature_label: string,
+      feature_value: string,
+      is_active: boolean
+    }
+  ],
+  created_at: timestamp,
+  updated_at: timestamp
+}
+
+
+7. Collection Questions
+{
+  _id: UUID,
+  seeker_id: UUID,
+  content: string,
+  status: "UN_ANSWERED" | "Picked" | "ANSWERED",
+  created_at: timestamp,
+  updated_at: timestamp,
+  assigned_scholars: [
+    {
+      scholar_id: UUID,
+      assigned_at: timestamp
+    }
+  ]
+}
+
+8. Collection Sessions
+{
+  _id: UUID,
+  seeker_id: UUID,
+  scholar_id: UUID,
+  created_at: timestamp,
+  ended_at: timestamp,
+  messages: [
+    {
+      _id: UUID,
+      content: string,
+      message_type: string,
+      sender_id: UUID,
+      receiver_id: UUID,
+      created_at: timestamp
+    }
+  ]
+}
+

@@ -1,0 +1,194 @@
+Table users {
+  id UUID [primary key]
+  password_hash varchar(255)
+  is_super_admin boolean
+  created_at timestamp
+  updated_at timestamp
+  role_id int
+  user_info uuid
+  full_name varchar(255)
+  email varchar(255)
+  dob date
+  profile_picture_url varchar(255)
+  gender enum('MALE', 'FEMALE')
+  phone_number string
+}
+
+Table role {
+  role_name string
+  is_active boolean
+  created_by uuid
+  modified_by uuid
+  id uuid pk
+  created_at timestamp
+  update_at timestamp
+}
+
+Table role_feature {
+  id uuid pk
+  role_id uuid
+  feature_id uuid
+  is_active boolean
+  created_by uuid
+  modified_by uuid
+  created_at timestamp
+  update_at timestamp
+}
+
+Table feature {
+  feature_label string
+  id uuid pk
+  feature_value string
+  is_active boolean
+  created_by uuid
+  modified_by uuid
+  created_at timestamp
+  update_at timestamp
+}
+
+Table user_verifications {
+  id UUID [primary key]
+  user_id UUID
+  code varchar(255)
+  purpose enum('otp', 'token')
+  expires_at timestamp
+}
+
+Table scholar_profiles {
+  id UUID [primary key]
+  user_id uuid
+  sect varchar(255)
+  qualifications text
+  certificate_file varchar(255)
+  discipline varchar(255)
+  years_experience int
+  admin_approved boolean
+  approval_date timestamp
+}
+
+Table questions {
+  id UUID [primary key]
+  seeker_id UUID
+  is_scholar_favourite boolean
+  content varchar(255)
+  status enum('UNANSWERED', 'PICKED', 'ANSWERED', 'CLOSED')
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table question_assignments {
+  id UUID [primary key]
+  scholar_id UUID
+  question_id UUID
+  status enum ('Satified' , 'UnSatisfied')
+  assigned_at timestamp
+}
+
+Table favourite_question {
+  id UUID [primary key]
+  user_id UUID
+  question_id UUID
+  status enum ('Satified' , 'UnSatisfied')
+  assigned_at timestamp
+}
+
+Table chat_session {
+  id UUID [primary key]
+  seeker_id UUID
+  scholar_id UUID
+  created_at timestamp
+  ended_at timestamp
+}
+
+Table chat_session_details {
+  id UUID [primary key]
+  session_id UUID
+  message_content text
+  message_type enum
+  created_at timestamp
+  sender_id uuid
+  reciever_id uuid
+}
+
+Table quran_surah {
+  id UUID [primary key]
+  surah_no int
+  surah_name varchar(255)
+  created_by uuid
+  modified_by uuid
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table verses {
+  id UUID [primary key]
+  surah_id UUID
+  verse_no int
+  content text
+  created_by uuid
+  modified_by uuid
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table hadith_book {
+  id UUID [primary key]
+  book_name int
+  author text
+  created_by uuid
+  modified_by uuid
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table hadith {
+  id UUID [primary key]
+  hadith_id UUID
+  hadith_no int
+  content text
+  created_by uuid
+  modified_by uuid
+  created_at timestamp
+  updated_at timestamp
+}
+
+// user role reference
+Ref: users.role_id > role.id
+Ref: role.id > role_feature.role_id
+Ref: feature.id > role_feature.feature_id
+
+// user  & user verification relation 
+Ref: users.id < user_verifications.user_id 
+
+// user & scholar profile relation
+Ref: users.id > scholar_profiles.id
+
+// seeker & questions relation
+Ref: users.id < questions.seeker_id
+
+// scholar & question assginment relation
+Ref: question_assignments.scholar_id > users.id
+
+// questions & question assignment relation
+Ref: question_assignments.question_id > questions.id
+
+// question and favourite question relation
+Ref: favourite_question.question_id > questions.id
+
+// user & question assginment relation
+Ref:  users.id < favourite_question.user_id
+
+// chat & chat details relation
+Ref: chat_session_details.session_id > chat_session.id
+
+// chat & seeker/scholar relation
+Ref: chat_session.scholar_id > users.id
+Ref: chat_session.seeker_id > users.id
+
+// hadith book & hadith relation
+Ref: hadith_book.id < hadith.id
+Ref: users.id < hadith_book.created_by
+
+// quran surah & verses relation
+Ref: quran_surah.id < verses.surah_id
+Ref: users.id < quran_surah.created_by
