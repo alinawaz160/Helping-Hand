@@ -1,0 +1,12 @@
+if(pm.response !== null) {
+
+    var responseBody = pm.response.json();
+
+    var token = responseBody.data.token;
+    pm.environment.set("ACCESS_TOKEN",token);
+
+    var nonceTokens = pm.response.headers.get("X-Token");
+    if(nonceTokens !== null) {
+        pm.environment.set("NONCE_TOKEN",nonceTokens);
+    }
+}
