@@ -1,3 +1,4 @@
+# Set Token in environment through postman script 
 if(pm.response !== null) {
 
     var responseBody = pm.response.json();
@@ -8,5 +9,18 @@ if(pm.response !== null) {
     var nonceTokens = pm.response.headers.get("X-Token");
     if(nonceTokens !== null) {
         pm.environment.set("NONCE_TOKEN",nonceTokens);
+    }
+}
+
+# Get Token from local environment through postman script
+var nonceToken = pm.response.headers.get("X-Token");
+
+if(nonceToken !== null) {
+
+    if (pm.environment.get("NONCE_TOKEN") === "") {
+        pm.environment.set("NONCE_TOKEN", nonceToken);
+    } else {
+        var currentToken = pm.environment.get("NONCE_TOKEN");
+        pm.environment.set("NONCE_TOKEN", currentToken + "," + nonceToken);
     }
 }
