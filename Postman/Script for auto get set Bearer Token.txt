@@ -1,0 +1,12 @@
+# Set bearer token from response in environment
+if(pm.response !== null) {
+    var responseBody = pm.response.json();
+    var token = responseBody.data.token;
+    pm.environment.set("TOKEN",token);
+}
+
+# Get bearer token from environment and set in bearer token
+pm.request.headers.upsert({
+    key: "Authorization",
+    value: "Bearer " + pm.environment.get("TOKEN")
+});
