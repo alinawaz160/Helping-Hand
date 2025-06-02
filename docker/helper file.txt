@@ -3,3 +3,14 @@
 
 * Run the container
 	"docker run -p 8080:8080 bid-management-backend"
+
+* Run containers from project root directory through docker-compose
+	"docker-compose up -d(no logs) --build"
+
+* Install extension through docker terminal
+	docker exec -it main-db bash
+
+	apt update
+	apt-get install postgis postgresql-17-postgis-3
+	psql -U postgres
+	CREATE EXTENSION postgis;
